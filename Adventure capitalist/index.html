@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en-us">
+ 
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Unity WebGL Player | AdVenture Capitalist!</title>
+    <link rel="stylesheet" href="TemplateData/style.css">
+    <script src="TemplateData/UnityProgress.js"></script>
+    <script src="/js/all.js"></script>
+
+</head>
+ 
+<body class="template">
+    <div class="webgl-content">
+        <div id="unityContainer" style="width: 960px; height: 600px; padding: 0px; margin: 0px; border: 0px; position: relative; background: rgb(35, 31, 32);">
+          
+      <canvas  class="emscripten" id="canvas" oncontextmenu="event.preventDefault()" id="canvas"width=335 height=667 style="width: 100%; height: 100%; background: #231F20"></canvas>
+      
+    <div id="loadingBox">
+        <div id="bgBar"></div>
+        <div id="progressBar"></div>
+        <p id="loadingInfo">Loading...</p>
+    </div>
+    <script type='text/javascript'>
+        // connect to canvas
+        var Module = {
+            TOTAL_MEMORY: 201326592,
+            filePackagePrefixURL: "Release/",
+            memoryInitializerPrefixURL: "Release/",
+            preRun: [],
+            postRun: [],
+            print: (function() {
+                return function(text) {
+                    console.log(text);
+                };
+            })(),
+            printErr: function(text) {
+                console.error(text);
+            },
+            canvas: document.getElementById('canvas'),
+            progress: null,
+            setStatus: function(text) {
+                if (this.progress == null) {
+                    if (typeof UnityProgress != 'function')
+                        return;
+                    this.progress = new UnityProgress(canvas);
+                }
+                if (!Module.setStatus.last) Module.setStatus.last = {
+                    time: Date.now(),
+                    text: ''
+                };
+                if (text === Module.setStatus.text) return;
+                this.progress.SetMessage(text);
+                var m = text.match(/([^(]+)\((\d+(\.\d+)?)\/(\d+)\)/);
+                if (m)
+                    this.progress.SetProgress(parseInt(m[2]) / parseInt(m[4]));
+                if (text === "")
+                    this.progress.Clear()
+            },
+            totalDependencies: 0,
+            monitorRunDependencies: function(left) {
+                this.totalDependencies = Math.max(this.totalDependencies, left);
+                Module.setStatus(left ? 'Preparing... (' + (this.totalDependencies - left) + '/' + this.totalDependencies + ')' : 'All downloads complete.');
+            }
+        };
+        Module.setStatus('Downloading (0.0/1)');
+    </script>
+    <script src="Release/UnityConfig.js"></script>
+    <script src="Release/fileloader.js"></script>
+    <script>
+        if (!(!Math.fround)) {
+            var script = document.createElement('script');
+            script.src = "Release/webgl.js";
+            document.body.appendChild(script);
+        } else {
+            var codeXHR = new XMLHttpRequest();
+            codeXHR.open('GET', 'Release/webgl.js', true);
+            codeXHR.onload = function() {
+                var code = codeXHR.responseText;
+                if (!Math.fround) {
+                    try {
+                        console.log('optimizing out Math.fround calls');
+                        var m = /var ([^=]+)=global\.Math\.fround;/.exec(code);
+                        var minified = m[1];
+                        if (!minified) throw 'fail';
+                        var startAsm = code.indexOf('// EMSCRIPTEN_START_FUNCS');
+                        var endAsm = code.indexOf('// EMSCRIPTEN_END_FUNCS');
+                        var asm = code.substring(startAsm, endAsm);
+                        do {
+                            var moar = false; // we need to re-do, as x(x( will not be fixed
+                            asm = asm.replace(new RegExp('[^a-zA-Z0-9\\$\\_]' + minified + '\\(', 'g'), function(s) {
+                                moar = true;
+                                return s[0] + '('
+                            });
+                        } while (moar);
+                        code = code.substring(0, startAsm) + asm + code.substring(endAsm);
+                        code = code.replace("'use asm'", "'almost asm'");
+                    } catch (e) {
+                        console.log('failed to optimize out Math.fround calls ' + e)
+                    }
+                }
+                var blob = new Blob([code], {
+                    type: 'text/javascript'
+                });
+                codeXHR = null;
+                var src = URL.createObjectURL(blob);
+                var script = document.createElement('script');
+                script.src = URL.createObjectURL(blob);
+                script.onload = function() {
+                    URL.revokeObjectURL(script.src);
+                };
+                document.body.appendChild(script);
+            };
+            codeXHR.send(null);
+        }
+    </script>
+
+<!-- SYSTEM_INJECTED_AD_BLOCKER -->
+<script>
+(function(){
+    // 1. Block window.open
+    const originalOpen = window.open;
+    window.open = function(url, windowName, windowFeatures) {
+        console.log('Blocked popup to:', url);
+        return null; // Prevent opening
+    };
+
+    // 2. Block external link clicks
+    document.addEventListener('click', function(e) {
+        let target = e.target;
+        while(target && target.tagName !== 'A') {
+            target = target.parentNode;
+        }
+        if(target && target.tagName === 'A' && target.href) {
+            // Allow our injected ad link
+            if(target.className.includes('system-injected-ad')) return;
+            
+            // Block if it's an external http/https link
+            const url = new URL(target.href, window.location.href);
+            if(url.protocol.startsWith('http') && url.hostname !== window.location.hostname) {
+                e.preventDefault();
+                e.stopPropagation();
+                console.log('Blocked external link to:', target.href);
+            }
+        }
+    }, true); // use capture phase to catch event early
+})();
+</script>
+
+<!-- RECTANGULAR BANNER PLACEHOLDER -->
+<div style="position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); z-index: 2147483647; display: flex; flex-direction: column; align-items: center; pointer-events: auto;">
+  <a href="https://your-other-website.com" target="_blank" class="system-injected-ad" style="display: flex; justify-content: center; align-items: center; width: 320px; height: 50px; background-color: #eab308; color: #1e3a8a; text-decoration: none; font-family: Arial, sans-serif; font-weight: 900; font-size: 16px; border: 2px solid #ca8a04; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.3); transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+    YOUR AD HERE
+  </a>
+</div>
+<!-- /SYSTEM_INJECTED_AD_BLOCKER -->
+
+</body>
+ 
+</html>

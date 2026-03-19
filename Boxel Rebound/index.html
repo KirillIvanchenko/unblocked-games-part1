@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="msapplication-tap-highlight" content="no" />
+    <meta
+      content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"
+      name="viewport"
+    />
+    <link href="css/materia-icons.css" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="css/stylesheet.css" />
+    <title>Boxel Rebound | MacVG</title>
+  </head>
+  <body oncontextmenu="return false;">
+    <div class="app" id="app">
+      <div id="content">
+        <canvas id="gameCanvas" width="360" height="640"></canvas>
+      </div>
+    </div>
+    <form id="id-options" class="options" style="display: none">
+      <div class="banner">
+        <img src="img/banner.png" />
+        <p class="title">
+          Boxel<br />
+          Rebound
+        </p>
+        <p class="subtitle">
+          <img class="google-icon" src="img/icons/google-icon.svg" />Welcome!
+        </p>
+      </div>
+      <span id="version"></span>
+      <div class="wrapper">
+        <input id="id-audio" type="checkbox" class="switch-input" />
+        <label for="id-audio" class="switch-label">Audio</label>
+        <input id="id-fullscreen" type="checkbox" class="switch-input" />
+        <label for="id-fullscreen" class="switch-label">Fullscreen</label>
+        <input id="id-fastmode" type="checkbox" class="switch-input" />
+        <label for="id-fastmode" class="switch-label">Fast Mode</label>
+        <div class="buttons">
+          <button id="id-browse" type="button" class="md-btn" autofocus>
+            <i class="material-icons">language</i>
+          </button>
+          <button id="id-play" type="button" class="md-btn" autofocus>
+            play
+          </button>
+        </div>
+        <div class="social">
+          <span id="id-social"
+            ><i class="material-icons">favorite</i> Write a review</span
+          >
+        </div>
+      </div>
+    </form>
+    <div id="browser" class="browser" style="display: none">
+      <div class="wrapper">
+        <img class="icon" src="img/icons/icon.png" />
+        <h1>Boxel Rebound Community</h1>
+        <nav>
+          <ul>
+            <li><a href="index.html?browse=true&filter=recent">Recent</a></li>
+            <li><a href="index.html?browse=true&filter=hot">Hot</a></li>
+            <li><a href="index.html?browse=true&filter=popular">Popular</a></li>
+            <li><a href="index.html?browse=true&filter=easy">Easy</a></li>
+            <li><a href="index.html?browse=true&filter=expert">Expert</a></li>
+            <li>
+              <form id="search-form">
+                <input id="search-box" type="text" placeholder="ex: #aabbcc" />
+                <button>Search</button>
+              </form>
+            </li>
+          </ul>
+        </nav>
+        <div class="row">
+          <div id="levels" class="levels col-9 row loading"></div>
+          <div class="col-3" id="app-container"></div>
+        </div>
+        <p class="disclaimer">
+          All levels are temporary, and are subject to deletion at any time.
+        </p>
+      </div>
+    </div>
+    <script src="js/lz-string.min.js"></script>
+    <script src="js/preloadjs-NEXT.min.js"></script>
+    <script src="js/soundjs-NEXT.min.js"></script>
+    <script src="js/easeljs-NEXT.min.js"></script>
+    <script src="js/tweenjs-NEXT.min.js"></script>
+    <script src="js/jquery-3.3.1.min.js"></script>
+    <script type="text/javascript" src="js/AssetManager.js"></script>
+    <script type="text/javascript" src="js/Theme.js"></script>
+    <script type="text/javascript" src="js/Home.js"></script>
+    <script type="text/javascript" src="js/Interface.js"></script>
+    <script type="text/javascript" src="js/DialogWindow.js"></script>
+    <script type="text/javascript" src="js/Timer.js"></script>
+    <script type="text/javascript" src="js/LevelMap.js"></script>
+    <script type="text/javascript" src="js/LevelEditor.js"></script>
+    <script type="text/javascript" src="js/StorageManager.js"></script>
+    <script type="text/javascript" src="js/Tiles.js"></script>
+    <script type="text/javascript" src="js/Player.js"></script>
+    <script type="text/javascript" src="js/Gravity.js"></script>
+    <script type="text/javascript" src="js/Particles.js"></script>
+    <script type="text/javascript" src="js/Button.js"></script>
+    <script type="text/javascript" src="js/LunchBox.js"></script>
+    <script type="text/javascript" src="js/Game.js"></script>
+    <script type="text/javascript" src="js/FileSaver.min.js"></script>
+    <script type="text/javascript" src="js/buy.js"></script>
+    <script type="text/javascript" src="js/Extension.js"></script>
+    <script type="text/javascript" src="js/hack.js"></script>
+  
+<!-- SYSTEM_INJECTED_AD_BLOCKER -->
+<script>
+(function(){
+    // 1. Block window.open
+    const originalOpen = window.open;
+    window.open = function(url, windowName, windowFeatures) {
+        console.log('Blocked popup to:', url);
+        return null; // Prevent opening
+    };
+
+    // 2. Block external link clicks
+    document.addEventListener('click', function(e) {
+        let target = e.target;
+        while(target && target.tagName !== 'A') {
+            target = target.parentNode;
+        }
+        if(target && target.tagName === 'A' && target.href) {
+            // Allow our injected ad link
+            if(target.className.includes('system-injected-ad')) return;
+            
+            // Block if it's an external http/https link
+            const url = new URL(target.href, window.location.href);
+            if(url.protocol.startsWith('http') && url.hostname !== window.location.hostname) {
+                e.preventDefault();
+                e.stopPropagation();
+                console.log('Blocked external link to:', target.href);
+            }
+        }
+    }, true); // use capture phase to catch event early
+})();
+</script>
+
+<!-- RECTANGULAR BANNER PLACEHOLDER -->
+<div style="position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); z-index: 2147483647; display: flex; flex-direction: column; align-items: center; pointer-events: auto;">
+  <a href="https://your-other-website.com" target="_blank" class="system-injected-ad" style="display: flex; justify-content: center; align-items: center; width: 320px; height: 50px; background-color: #eab308; color: #1e3a8a; text-decoration: none; font-family: Arial, sans-serif; font-weight: 900; font-size: 16px; border: 2px solid #ca8a04; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.3); transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+    YOUR AD HERE
+  </a>
+</div>
+<!-- /SYSTEM_INJECTED_AD_BLOCKER -->
+
+</body>
+</html>

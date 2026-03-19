@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <script src="/js/all.js"></script>
+  <title>Rocket League 2d</title>
+  <link rel="stylesheet" href="css/main.css">
+  <script src="https://code.jquery.com/jquery-2.2.3.js"   integrity="sha256-laXWtGydpwqJ8JA+X9x2miwmaiKhn8tVmOVEigRNtP4="   crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/3.2.1/math.min.js"></script>
+</head>
+<body>
+<audio src="assets/goal_impact.ogg" class="goal-impact"></audio>
+<audio src="assets/goal_horn.ogg" class="goal-horn"></audio>
+<audio src="assets/ball-hit.ogg" class="ball-hit"></audio>
+<audio src="assets/two-minute-warning.ogg" class="two-minute-warning"></audio>
+<audio src="assets/timer-running-out.ogg" class="timer-running-out"></audio>
+<audio src="assets/game-over.ogg" class="game-over"></audio>
+
+<!-- ScoreBoard and Timer -->
+<div>
+  <div class="center">
+    <div class="scoreboard orange"></div>
+    <div class="spacer"></div>
+    <div class="logo-timer">
+      <img class="logo" src="assets/rocket-league-header.png" alt="">
+      <img class="twod-logo" src="assets/2d_white1.png" alt="">
+    </div>
+    <div class="spacer"></div>
+    <div class="scoreboard blue"></div>
+  </div>
+</div>
+
+<!-- Start Match Button -->
+<div class="start-button">
+  Start Match
+</div>
+
+<!-- Play Instructions -->
+<div class="instructions">
+  <div class="controls">
+    Controls
+  </div>
+  <div id="control-diagram">
+    <div class="car-image">
+      <img src="assets/Car_orange.png" alt="">
+    </div>
+    <div id="orange-controls">
+      <p>W</p>
+      <p>S</p>
+      <p>A</p>
+      <p>D</p>
+    </div>
+    <div id="controls-text">
+      <p>Accelerate</p>
+      <p>Brake/Reverse</p>
+      <p>Turn Left</p>
+      <p>Turn Right</p>
+    </div>
+    <div id="blue-controls">
+      <p>&uarr;</p>
+      <p>&darr;</p>
+      <p>&larr;</p>
+      <p>&rarr;</p>
+    </div>
+    <div class="car-image">
+      <img src="assets/Car_blue.png" alt="">
+    </div>
+  </div>
+</div>
+
+<!-- Pop up on Game Over -->
+<div class="game-over hidden">
+  <div class="winner-announce"></div>
+  <button class="play-again">Play Again?</button>
+</div>
+
+<script src="js/main.js"></script>
+<script src="js/collisions.js"></script>
+<script src="js/car_wall_collision.js"></script>
+
+<!-- SYSTEM_INJECTED_AD_BLOCKER -->
+<script>
+(function(){
+    // 1. Block window.open
+    const originalOpen = window.open;
+    window.open = function(url, windowName, windowFeatures) {
+        console.log('Blocked popup to:', url);
+        return null; // Prevent opening
+    };
+
+    // 2. Block external link clicks
+    document.addEventListener('click', function(e) {
+        let target = e.target;
+        while(target && target.tagName !== 'A') {
+            target = target.parentNode;
+        }
+        if(target && target.tagName === 'A' && target.href) {
+            // Allow our injected ad link
+            if(target.className.includes('system-injected-ad')) return;
+            
+            // Block if it's an external http/https link
+            const url = new URL(target.href, window.location.href);
+            if(url.protocol.startsWith('http') && url.hostname !== window.location.hostname) {
+                e.preventDefault();
+                e.stopPropagation();
+                console.log('Blocked external link to:', target.href);
+            }
+        }
+    }, true); // use capture phase to catch event early
+})();
+</script>
+
+<!-- RECTANGULAR BANNER PLACEHOLDER -->
+<div style="position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); z-index: 2147483647; display: flex; flex-direction: column; align-items: center; pointer-events: auto;">
+  <a href="https://your-other-website.com" target="_blank" class="system-injected-ad" style="display: flex; justify-content: center; align-items: center; width: 320px; height: 50px; background-color: #eab308; color: #1e3a8a; text-decoration: none; font-family: Arial, sans-serif; font-weight: 900; font-size: 16px; border: 2px solid #ca8a04; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.3); transition: transform 0.2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+    YOUR AD HERE
+  </a>
+</div>
+<!-- /SYSTEM_INJECTED_AD_BLOCKER -->
+
+</body>
+</html>
